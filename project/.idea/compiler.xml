@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="crm_cache" />
+        <module name="crm_service" />
+        <module name="crm_commons" />
+        <module name="crm_entity" />
+        <module name="crm_web" />
+        <module name="crm_dao" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="crm_boot" target="11" />
+      <module name="crm_cache" target="11" />
+      <module name="crm_commons" target="11" />
+      <module name="crm_dao" target="11" />
+      <module name="crm_entity" target="11" />
+      <module name="crm_service" target="11" />
+      <module name="crm_web" target="11" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="crm_cache" options="-parameters" />
+      <module name="crm_commons" options="-parameters" />
+      <module name="crm_dao" options="-parameters" />
+      <module name="crm_entity" options="-parameters" />
+      <module name="crm_service" options="-parameters" />
+      <module name="crm_web" options="-parameters" />
+    </option>
+  </component>
+</project>

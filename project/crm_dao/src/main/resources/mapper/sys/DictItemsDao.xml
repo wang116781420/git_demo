@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javasm.sys.dao.DictItemsDao">
+
+    <resultMap type="com.javasm.sys.entity.DictItems" id="DictItemsMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="itemLabel" column="item_label" jdbcType="VARCHAR"/>
+        <result property="itemValue" column="item_value" jdbcType="VARCHAR"/>
+        <result property="dictType" column="dict_type" jdbcType="VARCHAR"/>
+        <result property="sortby" column="sortby" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="VARCHAR"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="basicQuery">
+        select id,
+               item_label,
+               item_value,
+               dict_type,
+               sortby,
+               create_time,
+               update_time,
+               create_by,
+               update_by
+        from sys_dict_items
+    </sql>
+
+    <select id="getById" resultMap="DictItemsMap">
+        <include refid="basicQuery"></include>
+        where id=#{id}
+    </select>
+
+    <select id="getByIds" resultMap="DictItemsMap">
+        <include refid="basicQuery"></include>
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </select>
+    <select id="getList" resultMap="DictItemsMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="itemLabel != null and itemLabel != ''">
+                and item_label = #{itemLabel}
+            </if>
+            <if test="itemValue != null and itemValue != ''">
+                and item_value = #{itemValue}
+            </if>
+            <if test="dictType != null and dictType != ''">
+                and dict_type = #{dictType}
+            </if>
+            <if test="sortby != null">
+                and sortby = #{sortby}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and update_time = #{updateTime}
+            </if>
+            <if test="createBy != null and createBy != ''">
+                and create_by = #{createBy}
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                and update_by = #{updateBy}
+            </if>
+        </where>
+        order by sortby asc
+    </select>
+
+
+    <insert id="insert">
+        insert into sys_dict_items(id, item_label, item_value, dict_type, sortby, create_time, update_time, create_by,
+                                   update_by)
+        values (#{id}, #{itemLabel}, #{itemValue}, #{dictType}, #{sortby}, #{createTime}, #{updateTime}, #{createBy},
+                #{updateBy})
+    </insert>
+
+    <update id="updateById">
+        update sys_dict_items
+        <set>
+            <if test="itemLabel != null and itemLabel != ''">
+                item_label = #{itemLabel},
+            </if>
+            <if test="itemValue != null and itemValue != ''">
+                item_value = #{itemValue},
+            </if>
+            <if test="dictType != null and dictType != ''">
+                dict_type = #{dictType},
+            </if>
+            <if test="sortby != null">
+                sortby = #{sortby},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+            <if test="createBy != null and createBy != ''">
+                create_by = #{createBy},
+            </if>
+            <if test="updateBy != null and updateBy != ''">
+                update_by = #{updateBy},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delById">
+        delete
+        from sys_dict_items
+        where id = #{id}
+    </delete>
+    <delete id="delByIds">
+        delete from sys_dict_items where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </delete>
+
+</mapper>
+

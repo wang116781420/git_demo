@@ -1,0 +1,48 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+app:
+  root: D:/upload
+  loginToken:
+    key: kTwrOc1ZM4tytIZdmVGgpbOHzdsndyPmaW3tBd77a7A=
+    expMinutes: 30
+  cors:
+    path: /**
+    methods: [ GET,POST,PUT,DELETE,OPTIONS ]
+    headers: [ ]
+    origins: [ http://localhost:8081 ]
+    credentials: true
+    exposedHeaders: [ admin_token ]
+    maxAge: 1800
+  page:
+    pageNum: 1
+    pageSize: 10
+
+spring:
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/crm?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=GMT%2B8&useSSL=false&allowPublicKeyRetrieval=true
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: wyh123456.
+      initial-size: 2
+      min-idle: 5
+      max-active: 10
+  redis:
+    host: 192.168.218.128
+    port: 6379
+    password: wyh123456.
+    database: 0
+    jedis:
+      pool:
+        min-idle: 3
+
+mybatis:
+  mapper-locations: classpath:mapper/*/*.xml
+  configuration:
+    map-underscore-to-camel-case: true
+
+pagehelper:
+  reasonable: true

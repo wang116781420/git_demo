@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javasm.sys.dao.DeptDao">
+
+    <resultMap type="com.javasm.sys.entity.Dept" id="DeptMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="dname" column="dname" jdbcType="VARCHAR"/>
+        <result property="daddress" column="daddress" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="VARCHAR"/>
+        <result property="pid" column="pid" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="basicQuery">
+        select id,
+               dname,
+               daddress,
+               create_time,
+               update_time,
+               pid,
+               status
+        from sys_dept
+    </sql>
+
+    <select id="getById" resultMap="DeptMap">
+        <include refid="basicQuery"></include>
+        where id=#{id}
+    </select>
+
+    <select id="getByIds" resultMap="DeptMap">
+        <include refid="basicQuery"></include>
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </select>
+    <select id="getList" resultMap="DeptMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="dname != null and dname != ''">
+                and dname = #{dname}
+            </if>
+            <if test="daddress != null and daddress != ''">
+                and daddress = #{daddress}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and update_time = #{updateTime}
+            </if>
+            <if test="pid != null and pid != ''">
+                and pid = #{pid}
+            </if>
+        </where>
+        order by create_time asc
+    </select>
+    <select id="getListByDname" resultMap="DeptMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="dname != null and dname != ''">
+                AND dname like concat('%',#{dname},'%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status=#{status}
+            </if>
+        </where>
+    </select>
+
+    <select id="getLastIdByParentId" resultType="String">
+        select max(id) as lastid from sys_dept where pid=#{pid}
+    </select>
+    <select id="getChargePerson"  resultType="com.javasm.sys.entity.User">
+        SELECT * FROM sys_user
+        <where>
+            <if test="deptId != null and deptId != ''">
+                AND dept_id=#{deptId}
+            </if>
+            <if test="posId != null and posId != ''">
+                AND pos_id = #{posId}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insert">
+        insert into sys_dept (id, dname,status,update_time,daddress,pid)
+        values (#{id}, #{dname},#{status},#{updateTime},#{daddress},#{pid})
+    </insert>
+
+    <update id="updateById">
+        update sys_dept
+        <set>
+            <if test="dname != null and dname != ''">
+                dname = #{dname},
+            </if>
+            <if test="daddress != null and daddress != ''">
+                daddress = #{daddress},
+            </if>
+            <if test="pid != null and pid != ''">
+                pid = #{pid},
+            </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <update id="updatePersonById">
+        UPDATE sys_user
+        <set>
+            <if test="posId != null and posId != ''">
+                pos_id = #{posId}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delById">
+        delete
+        from sys_dept
+        where id = #{id}
+    </delete>
+    <delete id="delByIds">
+        delete from sys_dept where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </delete>
+
+</mapper>
+

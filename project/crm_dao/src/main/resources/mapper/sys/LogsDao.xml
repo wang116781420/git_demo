@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javasm.sys.dao.LogsDao">
+
+    <resultMap type="com.javasm.sys.entity.Logs" id="LogsMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="modelName" column="model_name" jdbcType="VARCHAR"/>
+        <result property="opsType" column="ops_type" jdbcType="VARCHAR"/>
+        <result property="opsUser" column="ops_user" jdbcType="VARCHAR"/>
+        <result property="opsTime" column="ops_time" jdbcType="VARCHAR"/>
+        <result property="opsResult" column="ops_result" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="basicQuery">
+        select id,
+               model_name,
+               ops_type,
+               ops_user,
+               ops_time,
+               ops_result
+        from sys_logs
+    </sql>
+
+    <select id="getById" resultMap="LogsMap">
+        <include refid="basicQuery"></include>
+        where id=#{id}
+    </select>
+
+    <select id="getByIds" resultMap="LogsMap">
+        <include refid="basicQuery"></include>
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </select>
+    <select id="getList" resultMap="LogsMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="modelName != null and modelName != ''">
+                and model_name = #{modelName}
+            </if>
+            <if test="opsType != null and opsType != ''">
+                and ops_type = #{opsType}
+            </if>
+            <if test="opsUser != null and opsUser != ''">
+                and ops_user = #{opsUser}
+            </if>
+            <if test="opsTime != null and opsTime != ''">
+                and ops_time = #{opsTime}
+            </if>
+            <if test="opsResult != null and opsResult != ''">
+                and ops_result = #{opsResult}
+            </if>
+        </where>
+        order by ops_time desc
+    </select>
+
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into sys_logs(model_name, ops_type, ops_user, ops_time, ops_result)
+        values (#{modelName}, #{opsType}, #{opsUser}, #{opsTime}, #{opsResult})
+    </insert>
+
+    <update id="updateById">
+        update sys_logs
+        <set>
+            <if test="modelName != null and modelName != ''">
+                model_name = #{modelName},
+            </if>
+            <if test="opsType != null and opsType != ''">
+                ops_type = #{opsType},
+            </if>
+            <if test="opsUser != null and opsUser != ''">
+                ops_user = #{opsUser},
+            </if>
+            <if test="opsTime != null and opsTime != ''">
+                ops_time = #{opsTime},
+            </if>
+            <if test="opsResult != null and opsResult != ''">
+                ops_result = #{opsResult},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delById">
+        delete
+        from sys_logs
+        where id = #{id}
+    </delete>
+    <delete id="delByIds">
+        delete from sys_logs where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </delete>
+
+</mapper>
+

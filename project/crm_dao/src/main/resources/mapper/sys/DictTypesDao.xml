@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javasm.sys.dao.DictTypesDao">
+
+    <resultMap type="com.javasm.sys.entity.DictTypes" id="DictTypesMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="typeLabel" column="type_label" jdbcType="VARCHAR"/>
+        <result property="typeValue" column="type_value" jdbcType="VARCHAR"/>
+        <result property="flag" column="flag" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="basicQuery">
+        select id,
+               type_label,
+               type_value,
+               flag,
+               create_time,
+               update_time
+        from sys_dict_types
+    </sql>
+
+    <select id="getById" resultMap="DictTypesMap">
+        <include refid="basicQuery"></include>
+        where id=#{id}
+    </select>
+
+    <select id="getByIds" resultMap="DictTypesMap">
+        <include refid="basicQuery"></include>
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </select>
+    <select id="getList" resultMap="DictTypesMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="typeLabel != null and typeLabel != ''">
+                and type_label = #{typeLabel}
+            </if>
+            <if test="typeValue != null and typeValue != ''">
+                and type_value = #{typeValue}
+            </if>
+            <if test="flag != null">
+                and flag = #{flag}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <insert id="insert">
+        insert into sys_dict_types(id, type_label, type_value, flag, create_time, update_time)
+        values (#{id}, #{typeLabel}, #{typeValue}, #{flag}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        update sys_dict_types
+        <set>
+            <if test="typeLabel != null and typeLabel != ''">
+                type_label = #{typeLabel},
+            </if>
+            <if test="typeValue != null and typeValue != ''">
+                type_value = #{typeValue},
+            </if>
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delById">
+        delete
+        from sys_dict_types
+        where id = #{id}
+    </delete>
+    <delete id="delByIds">
+        delete from sys_dict_types where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javasm.sys.dao.PosDao">
+
+    <resultMap type="com.javasm.sys.entity.Pos" id="PosMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="posName" column="pos_name" jdbcType="VARCHAR"/>
+        <result property="posDesc" column="pos_desc" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="basicQuery">
+        select id,
+               pos_name,
+               pos_desc,
+               create_time,
+               update_time
+        from sys_pos
+    </sql>
+
+    <select id="getById" resultMap="PosMap">
+        <include refid="basicQuery"></include>
+        where id=#{id}
+    </select>
+
+    <select id="getByIds" resultMap="PosMap">
+        <include refid="basicQuery"></include>
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </select>
+    <select id="getList" resultMap="PosMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="posName != null and posName != ''">
+                and pos_name = #{posName}
+            </if>
+            <if test="posDesc != null and posDesc != ''">
+                and pos_desc = #{posDesc}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+
+    <insert id="insert">
+        insert into sys_pos(id, pos_name, pos_desc, create_time, update_time)
+        values (#{id}, #{posName}, #{posDesc}, #{createTime}, #{updateTime})
+    </insert>
+
+    <update id="updateById">
+        update sys_pos
+        <set>
+            <if test="posName != null and posName != ''">
+                pos_name = #{posName},
+            </if>
+            <if test="posDesc != null and posDesc != ''">
+                pos_desc = #{posDesc},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delById">
+        delete
+        from sys_pos
+        where id = #{id}
+    </delete>
+    <delete id="delByIds">
+        delete from sys_pos where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </delete>
+
+</mapper>
+

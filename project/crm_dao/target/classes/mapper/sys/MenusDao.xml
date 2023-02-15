@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.javasm.sys.dao.MenusDao">
+
+    <resultMap type="com.javasm.sys.entity.Menus" id="MenusMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="menuUrl" column="menu_url" jdbcType="VARCHAR"/>
+        <result property="menuIcon" column="menu_icon" jdbcType="VARCHAR"/>
+        <result property="flag" column="flag" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="VARCHAR"/>
+        <result property="orders" column="orders" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="basicQuery">
+        select id,
+               menu_name,
+               menu_url,
+               menu_icon,
+               flag,
+               pid,
+               type,
+               orders
+        from sys_menus
+    </sql>
+
+    <select id="getById" resultMap="MenusMap">
+        <include refid="basicQuery"></include>
+        where id=#{id}
+    </select>
+
+    <select id="getByIds" resultMap="MenusMap">
+        <include refid="basicQuery"></include>
+        where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </select>
+    <select id="getList" resultMap="MenusMap">
+        <include refid="basicQuery"></include>
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="menuName != null and menuName != ''">
+                and menu_name like concat('%',#{menuName},'%')
+            </if>
+            <if test="menuUrl != null and menuUrl != ''">
+                and menu_url = #{menuUrl}
+            </if>
+            <if test="menuIcon != null and menuIcon != ''">
+                and menu_icon = #{menuIcon}
+            </if>
+            <if test="flag != null">
+                and flag = #{flag}
+            </if>
+            <if test="createTime != null and createTime != ''">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+        order by orders asc
+    </select>
+
+    <select id="getLastIdByParentId" resultType="java.lang.String">
+        select max(id) as lastid from sys_menus where pid=#{pid}
+    </select>
+
+    <select id="getMenuIcon" resultType="com.javasm.sys.entity.Icon">
+        select * from menu_icon;
+    </select>
+
+
+    <insert id="insert">
+        insert into sys_menus(id, menu_name, menu_url, menu_icon, flag, pid,type )
+        values (#{id}, #{menuName}, #{menuUrl}, #{menuIcon}, #{flag},#{pid},#{type})
+    </insert>
+
+    <update id="updateById">
+        update sys_menus
+        <set>
+            <if test="menuName != null and menuName != ''">
+                menu_name = #{menuName},
+            </if>
+            <if test="menuUrl != null and menuUrl != ''">
+                menu_url = #{menuUrl},
+            </if>
+            <if test="menuIcon != null and menuIcon != ''">
+                menu_icon = #{menuIcon},
+            </if>
+            <if test="flag != null">
+                flag = #{flag},
+            </if>
+            <if test="createTime != null and createTime != ''">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+            <if test="orders != null and updateTime != ''">
+                orders = #{orders},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="delById">
+        delete
+        from sys_menus
+        where id = #{id}
+    </delete>
+    <delete id="delByIds">
+        delete from sys_menus where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="i">
+            #{i}
+        </foreach>
+    </delete>
+
+</mapper>
+
